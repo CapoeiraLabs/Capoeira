@@ -20,21 +20,30 @@ Capoeira  é um framework brasileiro de automação de testes para Java, inspira
 1. Clone o repositório
 2. Compile com Maven: `mvn clean install`
 
-## Exemplo Básico
+## Exemplo de Uso
+
+### Configuração
 ```java
-@Test
+ConfigurationManager.setConfig("api.baseUrl", "https://exemplo.com");
+String baseUrl = ConfigurationManager.getConfig("api.baseUrl")
+    .orElseThrow(() -> new RuntimeException("URL não configurada"));
+```
+
+### Carregamento de Fixtures
+```java
+UserData userData = TestDataLoader.loadJsonFixture(
+    "src/test/resources/fixtures/user.json", 
+    UserData.class
+);
+```
+
+### Anotações de Teste
+```java
+@CapoeiraAnnotations.Priority(10)
+@CapoeiraAnnotations.Category("IntegrationTest")
+@PerformanceTest.PerformanceTest(maxExecutionTime = 500)
 public void testUserCreation() {
-    TestContext context = new TestContext();
-    context.setBaseUrl("https://api.exemplo.com");
-    
-    UserDto newUser = TestDataLoader.load("user.json", UserDto.class);
-    
-    Response response = HttpClient.post("/users")
-        .body(newUser)
-        .execute();
-    
-    ApiAssertions.assertSuccess(response);
-    ApiAssertions.assertJsonSchema(response, "user-schema.json");
+    // Lógica do teste
 }
 ```
 
