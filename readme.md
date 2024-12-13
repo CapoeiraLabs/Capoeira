@@ -1,7 +1,8 @@
 # Capoeira  - Test Automation Framework 🤸🏿‍♀️
 
 ## Visão Geral
-Capoeira  é um framework brasileiro de automação de testes para Java, inspirado na simplicidade e poder do Karate.
+
+Capoeira  é um framework brasileiro de automação de testes para Java
 
 ## Estrutura do Projeto
 - `capoeira-core`: Componentes principais do framework
