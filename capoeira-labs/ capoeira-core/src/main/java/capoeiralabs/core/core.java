@@ -10,25 +10,7 @@ import io.restassured.response.Response;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class CapoeiraTest {
-    
-    private static class ConfigManager {
-        private static Map<String, Object> globalConfig = new HashMap<>();
-        
-        public static void setConfig(String key, Object value) {
-            globalConfig.put(key, value);
-        }
-        
-        public static Object getConfig(String key) {
-            return globalConfig.get(key);
-        }
-    }
-    
-   
 
-    /**
-     * Exemplo de teste de integração usando Capoeira Labs
-     */
     public static class ExampleIntegrationTest {
         @Test
         public void testUserApiFlow() {
