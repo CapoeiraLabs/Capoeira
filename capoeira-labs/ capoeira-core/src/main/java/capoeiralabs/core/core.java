@@ -11,39 +11,3 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 
-    public static class ExampleIntegrationTest {
-        @Test
-        public void testUserApiFlow() {
-            // Configuração
-            ConfigManager.setConfig("baseUrl", "https://api.exemplo.com");
-            
-            // Criação do cliente HTTP
-            HttpClient client = new HttpClient((String) ConfigManager.getConfig("baseUrl"))
-                .addHeader("Content-Type", "application/json");
-            
-            // Carregar dados de teste
-            TestDataLoader dataLoader = new TestDataLoader();
-            Map<String, Object> userData = dataLoader.loadJsonFixture("/fixtures/user.json", Map.class);
-            
-            // Criar usuário
-            Response createResponse = client.post("/users", userData);
-            Assertions.assertStatusCode(createResponse, 201);
-            
-            // Recuperar usuário criado
-            String userId = createResponse.jsonPath().getString("id");
-            Response getResponse = client.get("/users/" + userId);
-            Assertions.assertStatusCode(getResponse, 200);
-            Assertions.assertJsonPath(getResponse, "name", userData.get("name"));
-            
-            // Atualizar usuário
-            Map<String, Object> updateData = new HashMap<>(userData);
-            updateData.put("name", "Nome Atualizado");
-            Response updateResponse = client.put("/users/" + userId, updateData);
-            Assertions.assertStatusCode(updateResponse, 200);
-            
-            // Deletar usuário
-            Response deleteResponse = client.delete("/users/" + userId);
-            Assertions.assertStatusCode(deleteResponse, 204);
-        }
-    }
-}
