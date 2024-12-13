@@ -1,0 +1,70 @@
+{
+    "intellij_plugin": {
+        "manifest": {
+            "name": "Capoeira Labs",
+            "version": "0.1.0",
+            "description": "Plugin de suporte ao framework Capoeira Labs",
+            "vendor": "Capoeira Labs Team",
+            "idea_version": {
+                "since_build": "231",
+                "until_build": "233.*"
+            }
+        },
+        "features": [
+            "Test generation",
+            "Code completion",
+            "Live templates",
+            "Quick fixes",
+            "Performance insights"
+        ],
+        "configuration": {
+            "settings_page": "/capoeira/settings",
+            "project_configuration": {
+                "test_framework": "capoeira-core",
+                "default_test_directory": "src/test/java"
+            }
+        }
+    },
+    "vscode_extension": {
+        "manifest": {
+            "name": "capoeira-labs",
+            "displayName": "Capoeira Labs",
+            "version": "0.1.0",
+            "description": "Suporte ao framework Capoeira Labs",
+            "publisher": "capoeira-labs-team",
+            "repository": {
+                "type": "git",
+                "url": "https://github.com/capoeira-labs/vscode-plugin"
+            },
+            "engines": {
+                "vscode": "^1.80.0"
+            }
+        },
+        "features": [
+            "Intellisense",
+            "Test explorer",
+            "Code generation",
+            "Performance analysis"
+        ],
+        "configuration": {
+            "title": "Capoeira Labs",
+            "properties": {
+                "capoeiralabs.testDirectory": {
+                    "type": "string",
+                    "default": "src/test/java",
+                    "description": "Diretório padrão para testes"
+                },
+                "capoeiralabs.performanceThreshold": {
+                    "type": "number",
+                    "default": 1000,
+                    "description": "Limite de performance em milissegundos"
+                }
+            }
+        }
+    },
+    "plugin_development": {
+        "required_tools": [
+            "Java Development Kit 11+",
+            "IntelliJ SDK",
+            "VS Code Extension API"
+        ],
