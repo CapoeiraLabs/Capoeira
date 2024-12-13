@@ -1,1 +1,187 @@
 
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>io.capoeiralabs</groupId>
+    <artifactId>capoeira-parent</artifactId>
+    <version>1.5.0</version>
+    <packaging>pom</packaging>
+    
+    <name>${project.artifactId}</name>
+    <description>Test Automation Made Simple</description>
+    <url>https://github.com/capoeiralabs/capoeira</url>
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <url>https://www.opensource.org/licenses/mit-license.php</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+    <scm>
+        <url>https://github.com/capoeiralabs/capoeira</url>
+        <connection>scm:git:git://github.com/capoeiralabs/capoeira.git</connection>
+        <developerConnection>scm:git:git@github.com:capoeiralabs/capoeira.git</developerConnection>
+    </scm>
+    <developers>
+        <developer>
+            <name>Peter Thomas</name>
+            <id>ptrthomas</id>
+            <organization>capoeira Labs Inc.</organization>
+            <organizationUrl>https://capoeiralabs.io</organizationUrl>
+        </developer>
+    </developers>       
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <java.version>17</java.version>
+        <maven.compiler.version>3.13.0</maven.compiler.version>
+        <maven.surefire.version>3.2.5</maven.surefire.version>
+        <maven.shade.version>3.5.2</maven.shade.version>
+        <maven.javadoc.version>3.6.3</maven.javadoc.version>
+        <junit5.version>5.10.2</junit5.version>
+        <nexus.staging.plugin.version>1.6.13</nexus.staging.plugin.version>
+        <spring.version>5.3.19</spring.version>
+        <spring.boot.version>2.6.6</spring.boot.version>
+        <jacoco.plugin.version>0.7.9</jacoco.plugin.version>
+    </properties>
+
+    <modules>
+        <module>capoeira-core</module>        
+        <module>capoeira-junit5</module>
+        <module>capoeira-demo</module>        
+        <module>capoeira-gatling</module>
+        <module>capoeira-playwright</module>
+        <module>capoeira-robot</module>        
+        <module>capoeira-e2e-tests</module>
+        <module>capoeira-archetype</module>
+    </modules>
+
+    <build>       
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven.compiler.version}</version>
+                <configuration>
+                    <encoding>UTF-8</encoding>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                    <!-- <parameters>true</parameters> -->
+                    <!-- <compilerArgument>-Werror</compilerArgument> -->
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven.surefire.version}</version>
+                <configuration>
+                    <argLine>-Dfile.encoding=UTF-8</argLine>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>2.2.1</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>                                                          
+        </plugins>
+    </build>
+    
+    <profiles>
+        <profile> 
+            <id>depcheck</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.owasp</groupId>
+                        <artifactId>dependency-check-maven</artifactId>
+                        <version>9.1.0</version>
+                        <configuration>
+                            <skipProvidedScope>true</skipProvidedScope>
+                        </configuration>                        
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>aggregate</goal>
+                                </goals>
+                                <configuration>
+                                    <failBuildOnCVSS>0</failBuildOnCVSS>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin> 
+                </plugins>
+            </build>
+        </profile>        
+        <profile> 
+            <id>release</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>${maven.javadoc.version}</version>
+                        <executions>
+                            <execution>
+                                <id>attach-javadocs</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                                <configuration>
+                                    <doclint>none</doclint>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>3.2.2</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                                <configuration>
+                                    <gpgArguments>
+                                        <arg>--pinentry-mode</arg>
+                                        <arg>loopback</arg>
+                                    </gpgArguments>
+                                </configuration>                                                           
+                            </execution>                            
+                        </executions>                                                                                         
+                    </plugin>
+                    <plugin>
+                        <groupId>org.sonatype.plugins</groupId>
+                        <artifactId>nexus-staging-maven-plugin</artifactId>
+                        <version>${nexus.staging.plugin.version}</version>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <serverId>ossrh</serverId>
+                            <nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
+                            <autoReleaseAfterClose>true</autoReleaseAfterClose>                          
+                        </configuration>                       
+                    </plugin>                     
+                </plugins>
+            </build>
+        </profile>
+    </profiles>  
+    
+    <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+    </distributionManagement>                          
+    
+</project>
