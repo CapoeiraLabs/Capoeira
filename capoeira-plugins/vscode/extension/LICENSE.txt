@@ -1,0 +1,4 @@
+Copyright 2022 Karate Labs Inc.
+All Rights Reserved.
+Please read:
+https://www.karatelabs.io/eula

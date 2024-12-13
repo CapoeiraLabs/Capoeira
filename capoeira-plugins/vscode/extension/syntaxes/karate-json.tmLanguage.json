@@ -1,0 +1,300 @@
+{
+	"$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+	"name": "karate-json",
+	"scopeName": "source.json.karate",
+	"patterns": [
+		{
+			"include": "#value"
+		}
+	],
+	"repository": {
+		"value": {
+			"patterns": [
+				{
+					"include": "#constant"
+				},
+				{
+					"include": "#number"
+				},
+				{
+					"include": "#stringSingle"
+				},
+				{
+					"include": "#stringDouble"
+				},
+				{
+					"include": "#array"
+				},
+				{
+					"include": "#object"
+				}
+			]
+		},
+		"constant": {
+			"match": "\\b(?:true|false|null)\\b",
+			"name": "constant.language"
+		},
+		"number": {
+			"patterns": [
+				{
+					"match": "(0x)[0-9a-fA-f]*",
+					"name": "constant.numeric"
+				},
+				{
+					"match": "[+-.]?(?=[1-9]|0(?!\\d))\\d+(\\.\\d+)?([eE][+-]?\\d+)?",
+					"name": "constant.numeric"
+				}
+			]
+		},
+		"array": {
+			"begin": "\\[",
+			"beginCaptures": {
+				"0": {
+					"name": "punctuation.definition.array.begin.js"
+				}
+			},
+			"end": "\\]",
+			"endCaptures": {
+				"0": {
+					"name": "punctuation.definition.array.end.js"
+				}
+			},
+			"name": "meta.structure.array.js",
+			"patterns": [
+				{
+					"include": "#value"
+				},
+				{
+					"match": ",",
+					"name": "punctuation.separator.array.js"
+				},
+				{
+					"match": "[^\\s\\]]",
+					"name": "invalid.illegal.expected-array-separator.js"
+				}
+			]
+		},
+		"object": {
+			"begin": "\\{",
+			"beginCaptures": {
+				"0": {
+					"name": "punctuation.definition.dictionary.begin.js"
+				}
+			},
+			"end": "\\}",
+			"endCaptures": {
+				"0": {
+					"name": "punctuation.definition.dictionary.end.js"
+				}
+			},
+			"name": "meta.structure.dictionary.js",
+			"patterns": [
+				{
+					"include": "#key"
+				},
+				{
+					"begin": ":",
+					"beginCaptures": {
+						"0": {
+							"name": "punctuation.separator.dictionary.key-value.js"
+						}
+					},
+					"end": "(,)|(?=\\})",
+					"endCaptures": {
+						"1": {
+							"name": "punctuation.separator.dictionary.pair.js"
+						}
+					},
+					"name": "meta.structure.dictionary.value.js",
+					"patterns": [
+						{
+							"include": "#value"
+						},
+						{
+							"match": "[^\\s,]",
+							"name": "invalid.illegal.expected-dictionary-separator.js"
+						}
+					]
+				},
+				{
+					"match": "[^\\s\\}]",
+					"name": "invalid.illegal.expected-dictionary-separator.js"
+				}
+			]
+		},
+		"key": {
+			"patterns": [
+				{
+					"include": "#keyStringSingle"
+				},
+				{
+					"include": "#keyStringDouble"
+				},
+				{
+					"name": "keyword.other.unit",
+					"match": "[a-zA-Z0-9_-]"
+				}
+			]
+		},
+		"keyStringSingle": {
+			"begin": "'",
+			"beginCaptures": {
+				"0": {
+					"name": "punctuation.definition.string.begin.js"
+				}
+			},
+			"end": "'",
+			"endCaptures": {
+				"0": {
+					"name": "punctuation.definition.string.end.js"
+				}
+			},
+			"name": "entity.other.attribute-name",
+			"patterns": [
+				{
+					"include": "#stringEmbedded"
+				},
+				{
+					"include": "#stringEscapes"
+				},
+				{
+					"match": "[^']*[^\\n\\r'\\\\]$",
+					"name": "invalid.illegal.string.js"
+				}
+			]
+		},		
+		"stringSingle": {
+			"begin": "'",
+			"beginCaptures": {
+				"0": {
+					"name": "punctuation.definition.string.begin.js"
+				}
+			},
+			"end": "'",
+			"endCaptures": {
+				"0": {
+					"name": "punctuation.definition.string.end.js"
+				}
+			},
+			"name": "string.quoted.single",
+			"patterns": [
+				{
+					"include": "#stringEmbedded"
+				},
+				{
+					"include": "#stringEscapes"
+				},
+				{
+					"match": "[^']*[^\\n\\r'\\\\]$",
+					"name": "invalid.illegal.string.js"
+				}
+			]
+		},
+		"keyStringDouble": {
+			"begin": "\"",
+			"beginCaptures": {
+				"0": {
+					"name": "punctuation.definition.string.begin.js"
+				}
+			},
+			"end": "\"",
+			"endCaptures": {
+				"0": {
+					"name": "punctuation.definition.string.end.js"
+				}
+			},
+			"name": "entity.other.attribute-name",
+			"patterns": [
+				{
+					"include": "#stringEmbedded"
+				},
+				{
+					"include": "#stringEscapes"
+				},
+				{
+					"match": "[^\"]*[^\\n\\r\"\\\\]$",
+					"name": "invalid.illegal.string.js"
+				}
+			]
+		},		
+		"stringDouble": {
+			"begin": "\"",
+			"beginCaptures": {
+				"0": {
+					"name": "punctuation.definition.string.begin.js"
+				}
+			},
+			"end": "\"",
+			"endCaptures": {
+				"0": {
+					"name": "punctuation.definition.string.end.js"
+				}
+			},
+			"name": "string.quoted.double",
+			"patterns": [
+				{
+					"include": "#stringEmbedded"
+				},
+				{
+					"include": "#stringEscapes"
+				},
+				{
+					"match": "[^\"]*[^\\n\\r\"\\\\]$",
+					"name": "invalid.illegal.string.js"
+				}
+			]
+		},
+		"stringEscapes": {
+			"patterns": [
+				{
+					"match": "\\\\u(?![A-Fa-f0-9]{4}|{[A-Fa-f0-9]+})[^'\"]*",
+					"name": "invalid.illegal.unicode-escape.js"
+				},
+				{
+					"match": "\\\\u(?:[A-Fa-f0-9]{4}|({)([A-Fa-f0-9]+)(}))",
+					"name": "constant.character.escape.js",
+					"captures": {
+						"1": {
+							"name": "punctuation.definition.unicode-escape.begin.bracket.curly.js"
+						},
+						"2": {
+							"patterns": [
+								{
+									"match": "[A-Fa-f\\d]{7,}|(?!10)[A-Fa-f\\d]{6}",
+									"name": "invalid.illegal.unicode-escape.js"
+								}
+							]
+						},
+						"3": {
+							"name": "punctuation.definition.unicode-escape.end.bracket.curly.js"
+						}
+					}
+				},
+				{
+					"match": "\\\\(x[0-9A-Fa-f]{2}|[0-2][0-7]{0,2}|3[0-6][0-7]?|37[0-7]?|[4-7][0-7]?|.)",
+					"name": "constant.character.escape.js"
+				}
+			]
+		},
+		"stringEmbedded": {
+			"begin": "#\\(",
+			"end": "\\)",
+			"beginCaptures": {
+				"0": {
+					"name": "punctuation.definition.dictionary.begin.js"
+				}
+			},
+			"endCaptures": {
+				"0": {
+					"name": "punctuation.definition.dictionary.end.js"
+				}
+			},
+			"contentName": "meta.embedded.block.javascript",
+			"patterns": [
+				{
+					"include": "source.js"
+				}
+			]
+		}
+	}
+}

@@ -1,0 +1,189 @@
+{
+	"$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+	"name": "karate-log",
+	"scopeName": "text.log.karate",
+	"patterns": [
+		{
+			"include": "#httpRequest"
+		},
+		{
+			"include": "#httpResponse"
+		},          
+        {
+            "include": "#logLine"
+        },            
+		{
+			"include": "#featureStats"
+		},        
+        {
+            "include": "#failedFeatures"
+        },
+		{
+			"include": "#suiteStats"
+		},
+		{
+			"include": "#fileLink"
+		},
+		{
+			"include": "#commandLink"
+		}        	        								
+	],
+	"repository": {
+        "httpRequest": {
+            "begin": "^(?=\\d+ >)",
+            "while": "^(?![:\\d]{5})",
+            "patterns": [
+                {
+                    "include": "#httpMethod"
+                },                                         
+                {
+                    "include": "#httpHeader"
+                },                
+                {
+                    "include": "#jsonPayload"
+                },
+                {
+                    "include": "#xmlPayload"
+                }                
+            ]
+        },
+        "httpResponse": {
+            "begin": "^(?=\\d+ <)",
+            "while": "^(?![:\\d]{5}|[-]{5})",
+            "patterns": [
+                {
+                    "include": "#httpStatus"
+                },                                         
+                {
+                    "include": "#httpHeader"
+                },
+                {
+                    "include": "#jsonPayload"
+                },
+                {
+                    "include": "#xmlPayload"
+                }                                
+            ]
+        },                
+        "httpMethod": {
+            "match": "(^\\d+ .) ([A-Z]+) (.+)$",
+            "captures": {
+                "1": {
+                    "name": "punctuation.definition.tag"
+                },
+                "2": {
+                    "name": "string.regexp"
+                },
+                "3": {
+                    "name": "entity.other.attribute-name"
+                }
+            }
+        },
+        "httpStatus": {
+            "match": "(^\\d+ .) (\\d+)",
+            "captures": {
+                "1": {
+                    "name": "punctuation.definition.tag"
+                },                
+                "2":{
+                    "name": "string.regexp"
+                }
+            }            
+        },        
+        "httpHeader": {
+            "match": "(^\\d+ .) ([^:]+):(.+)$",
+            "captures": {
+                "1": {
+                    "name": "punctuation.definition.tag"
+                },                
+                "2": {
+                    "name": "keyword"
+                },
+                "3": {
+                    "name": "string"
+                }
+            }
+        },
+        "jsonPayload": {
+			"begin": "^\\s*(?=\\[|\\{)",
+			"while": "^(?!.*feature)",
+			"contentName": "meta.embedded.block.json",
+			"patterns": [
+				{
+					"include": "source.json"
+				}
+			]
+        },
+        "xmlPayload": {
+			"begin": "^\\s*(?=<)",
+			"while": "^(?!.*feature)",
+			"contentName": "meta.embedded.block.xml",
+			"patterns": [
+				{
+					"include": "text.xml"
+				}
+			]
+        },
+        "logLine": {
+            "match": "^[:\\d]{5}.+ ERROR .+$",
+            "name": "invalid"
+        },
+		"featureStats": {
+            "begin": "^[-]{5}[-]+",
+            "end": "^[-]{5}[-]+",
+            "beginCaptures": {
+                "0": {
+                    "name": "string"
+                }
+            },
+            "endCaptures": {
+                "0": {
+                    "name": "string"
+                }
+            },
+            "contentName": "keyword"
+        }, 
+		"suiteStats": {
+            "begin": "^={5}=+",
+            "end": "^={5}=+",
+            "beginCaptures": {
+                "0": {
+                    "name": "string"
+                }
+            },
+            "endCaptures": {
+                "0": {
+                    "name": "string"
+                }
+            },
+            "contentName": "keyword.other.unit"
+        },
+        "failedFeatures": {
+            "begin": "^>>> failed features:",
+            "end": "^<<<$",
+            "beginCaptures": {
+                "0": {
+                    "name": "invalid"
+                }
+            },
+            "endCaptures": {
+                "0": {
+                    "name": "invalid"
+                }
+            },
+            "contentName": "string"         
+        },
+        "fileLink": {
+			"name": "keyword",
+            "match": "file://.+"            
+        },
+        "commandLink": {
+            "match": "\\[Open Inline\\]",
+            "captures": {
+                "0": {
+                    "name": "keyword.other.unit"
+                }
+            }       
+        }        						
+	}
+}

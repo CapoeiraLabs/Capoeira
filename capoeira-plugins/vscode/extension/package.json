@@ -1,0 +1,275 @@
+{
+	"name": "karate",
+	"version": "2.0.4",
+	"publisher": "karatelabs",
+	"displayName": "Karate",
+	"description": "Test Automation Made Simple",
+	"license": "SEE LICENSE IN LICENSE",
+	"icon": "resources/karate-logo.png",
+	"author": {
+		"name": "Peter Thomas"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/karatelabs/vscode-extension"
+	},
+	"bugs": {
+		"url": "https://github.com/karatelabs/vscode-extension/issues",
+		"email": "info@karatelabs.io"
+	},
+	"homepage": "https://github.com/karatelabs/vscode-extension",
+	"sponsor": {
+		"url": "https://github.com/sponsors/karatelabs"
+	},
+	"pricing": "Trial",
+	"qna": false,
+	"categories": [
+		"Testing",
+		"Debuggers",
+		"Programming Languages",
+		"Formatters"
+	],
+	"keywords": [
+		"karate",
+		"test automation",
+		"api testing",
+		"http requests",
+		"bdd"
+	],
+	"engines": {
+		"vscode": "^1.75.0"
+	},
+	"activationEvents": [
+		"workspaceContains:**/*.feature"
+	],
+	"capabilities": {
+		"untrustedWorkspaces": {
+			"supported": false,
+			"description": "Karate scripts can call an external API"
+		}
+	},
+	"contributes": {
+		"languages": [
+			{
+				"id": "karate",
+				"aliases": [
+					"Karate",
+					"karate"
+				],
+				"extensions": [
+					".feature"
+				],
+				"configuration": "./syntaxes/karate-language-configuration.json",
+				"icon": {
+					"light": "resources/light/karate-file.svg",
+					"dark": "resources/dark/karate-file.svg"
+				}
+			},
+			{
+				"id": "karate-json",
+				"configuration": "./syntaxes/karate-json-language-configuration.json"
+			},
+			{
+				"id": "karate-log"
+			}
+		],
+		"grammars": [
+			{
+				"language": "karate",
+				"scopeName": "source.karate",
+				"path": "./syntaxes/karate.tmLanguage.json",
+				"embeddedLanguages": {
+					"meta.embedded.block.javascript": "javascript",
+					"meta.embedded.block.json": "karate-json",
+					"meta.embedded.block.xml": "xml"
+				}
+			},
+			{
+				"language": "karate-json",
+				"scopeName": "source.json.karate",
+				"path": "./syntaxes/karate-json.tmLanguage.json",
+				"embeddedLanguages": {
+					"meta.embedded.block.javascript": "javascript"
+				}
+			},
+			{
+				"language": "karate-log",
+				"scopeName": "text.log.karate",
+				"path": "./syntaxes/karate-log.tmLanguage.json",
+				"embeddedLanguages": {
+					"meta.embedded.block.json": "json",
+					"meta.embedded.block.xml": "xml"
+				}
+			}
+		],
+		"menus": {
+			"explorer/context": [
+				{
+					"when": "karatelabs.karate.proEnabled && explorerResourceIsFolder || karatelabs-karate.signedIn && resourceExtname == '.feature'",
+					"command": "karatelabs.karate.runTests"
+				},
+				{
+					"when": "karatelabs.karate.proEnabled && resourceFilename =~ /.+\\.(feature|js)/",
+					"command": "karatelabs.karate.runAsMock"
+				}
+			]
+		},
+		"commands": [
+			{
+				"command": "karatelabs.karate.signIn",
+				"title": "Sign In / Manage License",
+				"category": "Karate"
+			},
+			{
+				"command": "karatelabs.karate.runTests",
+				"title": "Run Karate Test(s)",
+				"category": "Karate"
+			},
+			{
+				"command": "karatelabs.karate.runAsMock",
+				"title": "Run as Karate Mock",
+				"category": "Karate"
+			},
+			{
+				"command": "karatelabs.karate.kill",
+				"title": "Kill running processes",
+				"category": "Karate"
+			}			
+
+		],
+		"breakpoints": [
+			{
+				"language": "karate"
+			}
+		],
+		"debuggers": [
+			{
+				"type": "karate",
+				"label": "Karate",
+				"configurationAttributes": {
+					"launch": {
+						"properties": {
+							"karateArgs": {
+								"type": "array",
+								"items": {
+									"type": "string"
+								},
+								"description": "All Karate options as an array (including feature file / path)",
+								"default": ["-t", "@smoke", "-T=5", "classpath:some/path"]
+							},	
+							"debugPreStep": {
+								"type": "string",
+								"description": "Karate script to run every time the debugger session is resumed.",
+								"default": "input(Key.ALT + Key.TAB)"
+							},
+							"noDebug": {
+								"type": "boolean",
+								"decription": "Always run without debugging",
+								"default": true
+							},
+							"projectName": {
+								"type": "string",
+								"description": "Applies when using the [redhat.java] extension, refer to its documentation",
+								"default": ""
+							}
+						}
+					}
+				},
+				"initialConfigurations": [
+					{
+						"type": "karate",
+						"name": "Karate: Debug",
+						"request": "launch",
+						"feature": "${file}"
+					}
+				]
+			}
+		],
+		"configuration": {
+			"title": "Karate",
+			"properties": {				
+				"karatelabs.karate.run.console": {
+					"scope": "resource",
+					"type": "string",
+					"default": "internalConsole",
+					"markdownDescription": "Choose where Karate test output is displayed. The `internalConsole` gives you better colors and links. Use `integratedTerminal` only if you face issues running with the Language Support for Java [redhat.java] extension.",
+					"enum": [
+						"internalConsole",
+						"integratedTerminal"
+					]
+				},
+				"karatelabs.karate.run.mode": {
+					"scope": "resource",
+					"type": "string",
+					"default": "vscode-java",
+					"markdownDescription": "If you have the Language Support for Java [redhat.java] extension installed (recommended) you don't need to install Java and you can work with Maven or Gradle projects. Choose `standalone` if you want to use the Karate standalone JAR.",
+					"enum": [
+						"vscode-java",
+						"standalone",
+						"custom"
+					],
+					"markdownEnumDescriptions": [
+						"Depend on the Language Support for Java [redhat.java] extension",
+						"Expects `#karatelabs.karate.run.modeJars#` to be configured and Java installed",
+						"Custom command-line for running 'java', 'mvn' or 'gradle' directly or for troubleshooting"
+					]
+				},
+				"karatelabs.karate.run.modeJars": {
+					"scope": "resource",
+					"type": "string",
+					"editPresentation": "multilineText",
+					"default": ".",
+					"markdownDescription": "Applicable if `#karatelabs.karate.run.mode#` is `standalone`, (relative) path to a folder containing the Karate standalone JAR (and other `*.jar` files if needed). Do **not** include `.jar` in the folder name."
+				},				
+				"karatelabs.karate.run.modeCustom": {
+					"scope": "resource",
+					"type": "string",
+					"editPresentation": "multilineText",
+					"default": "mvn test-compile exec:java -Dexec.mainClass=com.intuit.karate.Main -Dexec.classpathScope=test -Dexec.args=${karateArgs}",
+					"markdownDescription": "If `#karatelabs.karate.run.mode#` is `custom`, and `${karateArgs}` will be substituted. Example 1: `mvn test-compile exec:java -Dexec.mainClass=com.intuit.karate.Main -Dexec.classpathScope=test -Dexec.args=${karateArgs}` Example 2: `java -jar karate.jar ${karateArgs}`"
+				},
+				"karatelabs.karate.run.classpathPrefix": {
+					"scope": "resource",
+					"type": "string",
+					"default": ".",
+					"markdownDescription": "Entries (comma-delimited) that will be pre-fixed to the [standalone] (see `#karatelabs.karate.run.mode#`) Java classpath, and \"`.`\" is the workspace root. This is where `karate-config.js` will be looked for."
+				}				
+			}
+		}
+	},
+	"main": "./dist/extension.js",
+	"scripts": {
+		"vscode:prepublish": "npm run package",
+		"compile": "webpack",
+		"watch": "webpack --watch",
+		"package": "webpack --mode production --devtool hidden-source-map",
+		"compile-tests": "tsc -p . --outDir out",
+		"watch-tests": "tsc -p . -w --outDir out",
+		"pretest": "npm run compile-tests && npm run compile && npm run lint",
+		"lint": "eslint src --ext ts",
+		"test": "node ./out/test/runSuite.js",
+		"test-unit": "node ./out/test/runUnit.js"
+	},
+	"dependencies": {
+		"posthog-node": "^3.6.2",
+		"uuid": "^9.0.1"
+	},
+	"devDependencies": {
+		"@types/glob": "^8.1.0",
+		"@types/mocha": "^10.0.6",
+		"@types/node": "16.x",
+		"@types/uuid": "^9.0.1",
+		"@types/vscode": "^1.75.0",
+		"@typescript-eslint/eslint-plugin": "^6.21.0",
+		"@typescript-eslint/parser": "^6.21.0",
+		"@vscode/test-cli": "^0.0.4",
+		"@vscode/test-electron": "^2.3.9",
+		"eslint": "^8.56.0",
+		"glob": "^8.1.0",
+		"mocha": "^10.3.0",
+		"ts-loader": "^9.5.1",
+		"typescript": "^5.3.3",
+		"webpack": "^5.90.1",
+		"webpack-cli": "^5.1.4"
+	}
+}

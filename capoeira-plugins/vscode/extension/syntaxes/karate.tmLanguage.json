@@ -1,0 +1,361 @@
+{
+	"$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+	"name": "capoeira",
+	"scopeName": "source.capoeira",
+	"patterns": [
+		{
+			"include": "#comment"
+		},
+		{
+			"include": "#tags"
+		},
+		{
+			"include": "#examples"
+		},		
+		{
+			"include": "#tableRow"
+		},	
+		{
+			"include": "#heading"
+		},
+		{
+			"include": "#step"
+		},
+		{
+			"include": "#docString"
+		},		
+		{
+			"include": "#other"
+		}									
+	],
+	"repository": {
+		"comment": {
+			"name": "comment.line",
+			"begin": "^\\s*#",
+			"end": "$"
+		},
+		"tags": {
+			"name": "entity.name.tag",
+			"begin": "^\\s*@",
+			"end": "$"			
+		},
+		"heading": {
+			"begin": "^\\s*(Scenario|Scenario Outline|Feature|Background):",
+			"end": "$",
+			"beginCaptures": {
+				"0": {
+					"name": "entity.other.attribute-name"
+				}
+			},
+			"contentName": "comment.block.documentation"
+		},
+		"examples": {
+			"begin": "^\\s*Examples:",
+			"end": "\\|\\s*$",
+			"beginCaptures": {
+				"0": {
+					"name": "entity.other.attribute-name"
+				}
+			},
+			"endCaptures": {
+				"0": {
+					"name": "constant.language"
+				}
+			},
+			"patterns": [
+				{
+					"match": "(\\|)([^|]*)",
+					"captures": {
+						"1": {
+							"name": "constant.language"
+						},
+						"2": {
+							"name": "keyword.other.unit"
+						}
+					}
+				}																	
+			]
+		},
+		"tableRow": {
+			"name": "keyword.operator",
+			"begin": "^\\s*(?=\\|)",
+			"end": "$",
+			"patterns": [
+				{
+					"match": "(\\|)([^|]*)",
+					"captures": {
+						"1": {
+							"name": "constant.language"
+						},
+						"2": {
+							"name": "string.unquoted"
+						}
+					}
+				}																	
+			]					
+		},		
+		"step": {
+			"begin": "^\\s*(\\*|Given|When|Then|And|But)\\s+",
+			"end": "$",
+			"beginCaptures": {
+				"1": {
+					"name": "punctuation.definition.tag"
+				}
+			},
+			"patterns": [
+				{
+					"include": "#method"
+				},
+				{
+					"include": "#match"
+				},									
+				{
+					"include": "#assignment"
+				},
+				{
+					"include": "#command"
+				},
+				{
+					"include": "#evalJs"
+				}				
+			]			
+		},
+		"method": {
+			"begin": "method\\s+",
+			"end": "$",
+			"contentName": "entity.other.attribute-name",
+			"beginCaptures": {
+				"0": {
+					"name": "string.regexp"
+				}
+			}	
+		},	
+		"match": {
+			"begin": "(match)\\s+(each\\s+)?",
+			"end": "$",
+			"beginCaptures": {
+				"1": {
+					"name": "keyword.other.unit"
+				},
+				"2": {
+					"name": "keyword"
+				}				
+			},
+			"patterns": [
+				{
+					"include": "#matchExpr"
+				}																	
+			]				
+		},			
+		"matchExpr": {
+			"begin": "\\S+",
+			"end": "\\s+([=!]=|contains any|contains deep|contains only deep|contains only|[!]?contains)\\s+(.*)",
+			"beginCaptures": {
+				"0": {
+					"name": "variable.name"
+				}			
+			},
+			"endCaptures": {
+				"1": {
+					"name": "constant.language"
+				},
+				"2": {
+					"patterns": [
+						{
+							"include": "#capoeiraXml"
+						},						
+						{
+							"include": "#capoeiraJson"
+						},
+						{
+							"include": "#gherkinPlaceholder"
+						},						
+						{
+							"include": "#capoeiraJs"
+						}
+					]
+				}				
+			}			
+		},		
+		"assignment": {
+			"begin": "(\\w+)\\s+(\\w+)\\s+(=)",
+			"end": "$",
+			"beginCaptures": {
+				"1": {
+					"name": "keyword"
+				},
+				"2": {
+					"name": "keyword.other.unit"
+				},
+				"3": {
+					"name": "keyword.operator"
+				}
+			},
+			"patterns": [
+				{
+					"include": "#capoeiraXml"
+				},				
+				{
+					"include": "#capoeiraJson"
+				},
+				{
+					"include": "#capoeiraJsonPath"
+				},
+				{
+					"include": "#gherkinPlaceholder"
+				},								
+				{
+					"include": "#capoeiraJs"
+				}							
+			]			
+		},
+		"command": {
+			"begin": "(\\w+)\\s+",
+			"end": "$",
+			"beginCaptures": {
+				"1": {
+					"name": "keyword"
+				}
+			},			
+			"patterns": [
+				{
+					"include": "#capoeiraXml"
+				},				
+				{
+					"include": "#capoeiraJson"
+				},
+				{
+					"include": "#gherkinPlaceholder"
+				},				
+				{
+					"include": "#capoeiraJs"
+				}							
+			]			
+		},
+		"evalJs": {
+			"begin": "(?=\\w+\\S)",
+			"end": "$",		
+			"patterns": [
+				{
+					"include": "#gherkinPlaceholder"
+				},					
+				{
+					"include": "#capoeiraJs"
+				}							
+			]
+		},
+		"docString": {
+			"begin": "\\s*[\"]{3}",
+			"end": "[\"]{3}",
+			"beginCaptures": {
+				"0": {
+					"name": "keyword.operator"
+				}
+			},
+			"endCaptures": {
+				"0": {
+					"name": "keyword.operator"
+				}
+			},
+			"patterns": [
+				{
+					"include": "#capoeiraXmlMulti"
+				},				
+				{
+					"include": "#capoeiraJsonMulti"
+				},
+				{
+					"include": "#capoeiraJsMulti"
+				}
+			]
+		},		
+		"capoeiraJson": {
+			"begin": "(?=\\s*\\{|\\[)",
+			"end": "$",
+			"contentName": "meta.embedded.block.json",
+			"patterns": [
+				{
+					"include": "source.json.capoeira"
+				}
+			]
+		},
+		"capoeiraJsonPath": {
+			"begin": "(?=.+\\[\\?)",
+			"end": "$",	
+			"contentName": "meta.embedded.block.json",
+			"patterns": [
+				{
+					"include": "source.json"
+				}
+			]			
+		},
+		"capoeiraXml": {
+			"begin": "(?=<)",
+			"end": "$",
+			"contentName": "meta.embedded.block.xml",
+			"patterns": [
+				{
+					"include": "text.xml"
+				}
+			]
+		},		
+		"capoeiraJsonMulti": {
+			"begin": "\\s*(?=\\{|\\[)",
+			"end": "(?=[\"]{3})",
+			"contentName": "meta.embedded.block.json",
+			"patterns": [
+				{
+					"include": "source.json.capoeira"
+				}
+			]
+		},
+		"capoeiraXmlMulti": {
+			"begin": "\\s*(?=<)",
+			"end": "(?=[\"]{3})",
+			"contentName": "meta.embedded.block.xml",
+			"patterns": [
+				{
+					"include": "text.xml"
+				}
+			]
+		},				
+		"capoeiraJs": {		
+			"begin": "(?=.)",
+			"end": "$",									
+			"contentName": "meta.embedded.block.js",
+			"patterns": [
+				{
+					"include": "source.js"
+				}
+			]			
+		},
+		"capoeiraJsMulti": {
+			"begin": "(?=.)",
+			"end": "(?=[\"]{3})",
+			"contentName": "meta.embedded.block.js",
+			"patterns": [
+				{
+					"include": "source.js"
+				}
+			]
+		},
+		"gherkinPlaceholder": {
+			"match": "(.*)(<[^>]+>)(.*)",
+			"captures": {
+				"1": {
+					"name": "variable"
+				},
+				"2": {
+					"name": "comment"
+				},
+				"3": {
+					"name": "variable"
+				}							
+			}
+		},
+		"other": {
+			"match": ".*",
+			"name": "comment"
+		}								
+	}
+}
