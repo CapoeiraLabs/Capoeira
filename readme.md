@@ -63,4 +63,7 @@ public void testUserCreation() {
 
 ## Licença
 MIT License
+
+```
+Michael Bullet
 ```
