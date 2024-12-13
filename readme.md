@@ -1,7 +1,7 @@
-# Capoeira Labs - Test Automation Framework 🤸🏿‍♀️
+# Capoeira  - Test Automation Framework 🤸🏿‍♀️
 
 ## Visão Geral
-Capoeira Labs é um framework de automação de testes para Java, inspirado na simplicidade e poder do Karate.
+Capoeira  é um framework brasileiro de automação de testes para Java, inspirado na simplicidade e poder do Karate.
 
 ## Estrutura do Projeto
 - `capoeira-core`: Componentes principais do framework
