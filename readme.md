@@ -2,7 +2,7 @@
 
 ## Visão Geral
 
-Capoeira  é um framework brasileiro de automação de testes para Java
+Capoeira  é um framework de automação de testes para Java
 
 ## Estrutura do Projeto
 - `capoeira-core`: Componentes principais do framework
